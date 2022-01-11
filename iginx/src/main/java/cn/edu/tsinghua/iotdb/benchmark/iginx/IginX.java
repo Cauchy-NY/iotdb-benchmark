@@ -146,7 +146,7 @@ public class IginX implements IDatabase {
     String sql =
         buildSelectFromClause(rangeQuery.getDeviceSchema(), "")
             + String.format(
-                " WHERE time >= %s AND time <= %s;",
+                " WHERE time >= %s AND time <= %s",
                 rangeQuery.getStartTimestamp(), rangeQuery.getEndTimestamp());
     return executeQuery(sql);
   }
@@ -202,16 +202,17 @@ public class IginX implements IDatabase {
     String sql =
         buildSelectFromClause(groupByQuery.getDeviceSchema(), groupByQuery.getAggFun())
             + String.format(
-                " WHERE time >= %s AND time <= %s",
-                groupByQuery.getStartTimestamp(), groupByQuery.getEndTimestamp())
-            + String.format("GROUP BY %sms;", groupByQuery.getGranularity());
+                " GROUP [%s, %s] BY %sms;",
+                groupByQuery.getGranularity(),
+                groupByQuery.getStartTimestamp(),
+                groupByQuery.getEndTimestamp());
     return executeQuery(sql);
   }
 
   @Override
   public Status latestPointQuery(LatestPointQuery latestPointQuery) {
     String sql =
-        buildSelectFromClause(latestPointQuery.getDeviceSchema(), "last") + " WHERE time >= 0;";
+        buildSelectFromClause(latestPointQuery.getDeviceSchema(), "last") + " WHERE time >= 0";
     return executeQuery(sql);
   }
 
@@ -220,9 +221,9 @@ public class IginX implements IDatabase {
     String sql =
         buildSelectFromClause(rangeQuery.getDeviceSchema(), "")
             + String.format(
-                " WHERE time >= %s AND time <= %s;",
+                " WHERE time >= %s AND time <= %s",
                 rangeQuery.getStartTimestamp(), rangeQuery.getEndTimestamp())
-            + "ORDER BY TIME DESC;";
+            + " ORDER BY TIME DESC;";
     return executeQuery(sql);
   }
 
@@ -236,7 +237,7 @@ public class IginX implements IDatabase {
             + " AND "
             + buildBooleanExpression(
                 valueRangeQuery.getDeviceSchema(), valueRangeQuery.getValueThreshold())
-            + "ORDER BY TIME DESC;";
+            + " ORDER BY TIME DESC;";
     return executeQuery(sql);
   }
 
