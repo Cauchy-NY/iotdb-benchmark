@@ -63,7 +63,7 @@ public class IginX implements IDatabase {
   @Override
   public void cleanup() throws TsdbException {
     try {
-      session.executeSql("DELETE FROM *;");
+      session.executeSql("CLEAR DATA;");
       LOGGER.info("Finish clean data!");
     } catch (SessionException | ExecutionException e) {
       LOGGER.warn("Clear Data failed because ", e);
